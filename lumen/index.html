@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lumen: OpenGL shaders from HolyC - Wali Lambert</title>
+<meta name="description" content="lumen is a HolyC host program for real-time OpenGL fragment shader scenes, with HDR bloom, hot reload and deterministic offline rendering.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar">
+  <div class="bar-inner">
+    <a href="../">Wali Lambert</a>
+    <nav aria-label="Site">
+      <ul>
+        <li><a href="./" aria-current="page">lumen</a></li>
+        <li><a href="https://github.com/YatoVoid">github</a></li>
+        <li><a href="mailto:wali.lambert1960@gmail.com">email</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<p class="meta crumb"><a href="../#holyc">index</a> / holyc / lumen</p>
+<h1>lumen</h1>
+
+<p class="lede">A small HolyC program that opens a window, creates an OpenGL 3.3 context,
+compiles a fragment shader, and runs it every frame with a bloom pass on top. The pictures
+are drawn on the GPU; everything around them is HolyC.</p>
+
+<p class="meta">HolyC (hcc), SDL2, OpenGL 3.3, GLSL · MIT ·
+<a href="https://github.com/YatoVoid/holyc-opengl-shaders">source</a></p>
+
+<ul class="toc" aria-label="On this page">
+  <li><a href="#scenes">scenes</a></li>
+  <li><a href="#frame">a frame</a></li>
+  <li><a href="#scene-file">writing a scene</a></li>
+  <li><a href="#reload">hot reload</a></li>
+  <li><a href="#offline">offline rendering</a></li>
+  <li><a href="#run">running it</a></li>
+  <li><a href="#limits">limits</a></li>
+</ul>
+
+<h2 id="scenes"><span class="n">1</span> Scenes</h2>
+<p>There are four. Each one is a single <code>.frag</code> file, and keys 1 to 4 switch
+between them while the program runs. All of these clips were rendered by lumen itself, not
+screen-recorded.</p>
+
+<div class="pair">
+  <figure>
+    <video controls muted loop playsinline preload="none" poster="media/raymarch.jpg" width="1280" height="720">
+      <source src="media/raymarch.mp4" type="video/mp4">
+    </video>
+    <figcaption>raymarch: a signed distance field scene with soft shadows, ambient
+    occlusion and one mirror bounce. Drag to orbit.</figcaption>
+  </figure>
+  <figure>
+    <video controls muted loop playsinline preload="none" poster="media/fractal.jpg" width="1280" height="720">
+      <source src="media/fractal.mp4" type="video/mp4">
+    </video>
+    <figcaption>fractal: a Mandelbulb whose power moves between 4 and 8, coloured by an
+    orbit trap.</figcaption>
+  </figure>
+  <figure>
+    <video controls muted loop playsinline preload="none" poster="media/particles.jpg" width="1280" height="720">
+      <source src="media/particles.mp4" type="video/mp4">
+    </video>
+    <figcaption>particles: 140 comets on tilted elliptical orbits. Hold the mouse to pull
+    them.</figcaption>
+  </figure>
+  <figure>
+    <video controls muted loop playsinline preload="none" poster="media/plasma.jpg" width="1280" height="720">
+      <source src="media/plasma.mp4" type="video/mp4">
+    </video>
+    <figcaption>plasma: four summed sine fields through a cosine palette. The smallest
+    scene.</figcaption>
+  </figure>
+</div>
+
+<h2 id="frame"><span class="n">2</span> What happens in a frame</h2>
+<p>Scenes render in linear HDR, so a light eight times brighter than white stays eight times
+brighter until the very end. Then:</p>
+<ol class="steps">
+  <li><b>Scene pass.</b> The scene shader draws into an <code>RGBA16F</code> texture.
+  Values above 1.0 survive.</li>
+  <li><b>Bright pass.</b> The first blur pass keeps only what exceeds 1.0, with a soft knee
+  so the cutoff doesn't show up as an edge.</li>
+  <li><b>Blur.</b> A 9-tap Gaussian, done as 5 bilinear taps, runs horizontally into one
+  half-resolution texture and vertically into another. The pair repeats four times, each
+  round blurring the last, so the glow spreads further than one kernel can.</li>
+  <li><b>Composite.</b> Scene plus blur, tone mapped with an ACES curve and gamma corrected
+  into the window.</li>
+</ol>
+<p>Splitting the 2D Gaussian into two 1D passes turns <i>N</i>&times;<i>N</i> texture reads
+per pixel into 2<i>N</i>. Doing it at half resolution divides the cost by four again, and the
+blur hides the detail that was lost.</p>
+
+<figure>
+  <video controls muted loop playsinline preload="none" poster="media/particles-compare.jpg" width="1280" height="720">
+    <source src="media/particles-compare.mp4" type="video/mp4">
+  </video>
+  <figcaption>Bloom off on the left of the divider, on to the right. Without it, bright
+  pixels clip to white and stop there.</figcaption>
+</figure>
+
+<p>There are no vertex buffers. The vertex stage makes one triangle from
+<code>gl_VertexID</code> that covers the screen, so every pixel goes through the scene's
+fragment function.</p>
+
+<h2 id="scene-file"><span class="n">3</span> Writing a scene</h2>
+<p>A scene defines <code>mainImage</code> and returns linear colour. It doesn't do gamma or
+tone mapping; the composite pass does. This is the whole plasma scene:</p>
+<pre><code>void mainImage(out vec4 c, in vec2 fc)
+{
+  vec2 uv = (fc - 0.5 * iResolution.xy) / iResolution.y;
+  float v = sin(uv.x * 8.0 + iTime) + sin(uv.y * 9.0 - iTime * 1.3)
+          + sin((uv.x + uv.y) * 7.0 + iTime * 0.7)
+          + sin(length(uv) * 14.0 - iTime * 2.0);
+  vec3 col = 0.5 + 0.5 * cos(vec3(0.0, 2.1, 4.2) + v);
+  float ridge = pow(0.5 + 0.5 * sin(v * 1.5 - iTime), 8.0);
+  c = vec4(col * (0.35 + 3.2 * ridge), 1.0);
+}</code></pre>
+<p>The host adds the <code>#version</code> line and three uniforms in front, and a
+<code>main</code> that calls <code>mainImage</code> after it:</p>
+<table>
+  <thead><tr><th>Uniform</th><th>Type</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>iResolution</code></td><td><code>vec3</code></td><td>framebuffer width and height in pixels</td></tr>
+    <tr><td><code>iTime</code></td><td><code>float</code></td><td>seconds since start, or frame index over fps when rendering offline</td></tr>
+    <tr><td><code>iMouse</code></td><td><code>vec4</code></td><td>x and y in pixels; z is 1.0 while the left button is held</td></tr>
+  </tbody>
+</table>
+<p>The prelude ends with <code>#line 1</code>, so compile errors point at the right line of
+the scene file.</p>
+
+<h2 id="reload"><span class="n">4</span> Hot reload</h2>
+<p>The running scene's file is read again every 250 ms. Save it and the new version compiles
+in place. If it doesn't compile, the error goes to the terminal and the old version keeps
+running, so a typo never blanks the window.</p>
+
+<h2 id="offline"><span class="n">5</span> Offline rendering</h2>
+<p><code>--render</code> draws frames into a hidden window at a fixed time step and writes
+them out as PPM files. Time comes from the frame index, not the clock, so the output is the
+same on every run and on every machine. <code>scripts/record.sh</code> wraps this and
+encodes the mp4 and gif with ffmpeg; <code>--compare</code> makes the bloom off/on clips.</p>
+<pre><code>./build/lumen --render &lt;scene&gt; &lt;out-dir&gt; &lt;frames&gt; &lt;fps&gt; &lt;width&gt; &lt;height&gt; &lt;bloom 0|1&gt;
+scripts/record.sh [scene...]
+scripts/record.sh --compare [scene...]</code></pre>
+
+<h2 id="run"><span class="n">6</span> Running it</h2>
+<p>You need <a href="https://github.com/Jamesbarford/holyc-lang">hcc</a>, SDL2, and a driver
+with OpenGL 3.3.</p>
+<pre><code>hcc src/main.HC -o build/lumen
+./build/lumen            # raymarch
+./build/lumen fractal    # any file in shaders/</code></pre>
+<table>
+  <thead><tr><th>Key</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr><td><kbd>1</kbd>&ndash;<kbd>4</kbd></td><td>switch scene</td></tr>
+    <tr><td><kbd>B</kbd></td><td>toggle bloom</td></tr>
+    <tr><td><kbd>R</kbd></td><td>reload the current scene</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>quit</td></tr>
+    <tr><td>left drag</td><td>orbit the camera (raymarch, fractal) or pull the particles</td></tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr><th>File</th><th>What's in it</th></tr></thead>
+  <tbody>
+    <tr><td><code>src/main.HC</code></td><td>window, scene loading, hot reload, offline renderer</td></tr>
+    <tr><td><code>src/post.HC</code></td><td>framebuffers, bloom passes, final composite</td></tr>
+    <tr><td><code>src/gl.HC</code></td><td>OpenGL 3.3 declarations, shader compile and link</td></tr>
+    <tr><td><code>src/sdl2.HC</code></td><td>SDL2 declarations and input</td></tr>
+    <tr><td><code>shaders/</code></td><td>the scenes, plus blur and composite in <code>post/</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="limits"><span class="n">7</span> Limits</h2>
+<ul class="plain">
+  <li>Bloom threshold, strength and number of rounds are constants at the top of
+  <code>src/post.HC</code>, not uniforms yet.</li>
+  <li>Tested on Linux with Mesa on an Intel GPU. macOS should need
+  <code>-clibs "-framework OpenGL"</code> and hasn't been tried.</li>
+</ul>
+<p>The SDL2 and OpenGL declarations come from the
+<a href="https://yatovoid.github.io/holyc-graphics-guide/">HolyC Graphics Guide</a>. The
+distance functions follow Inigo Quilez's articles.</p>
+
+<p class="meta"><a href="../#holyc">&larr; back to the index</a></p>
+</main>
+
+<footer>
+  <p>One HTML file per page and one stylesheet. No scripts, no trackers.</p>
+  <p>Last changed 2026-11-02.</p>
+</footer>
+</body>
+</html>
