@@ -1,11 +1,5 @@
 # yatovoid.github.io
 
-Personal site. Plain HTML and one stylesheet, no build step.
+Live at **https://yatovoid.github.io/**
 
-To preview locally:
-
-    python3 -m http.server
-
-then open http://localhost:8000/.
-
-Published with GitHub Pages from the `main` branch, root folder.
+Plain HTML and one stylesheet, no build step. Published with GitHub Pages from `main`.
