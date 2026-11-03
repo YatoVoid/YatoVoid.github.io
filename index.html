@@ -26,12 +26,15 @@
 <main id="main">
 <h1>Wali Lambert</h1>
 
-<p class="lede">I study at the University of Houston, and I co-founded
-<a href="https://whaletale.tech">WhaleTale</a>, a hardware company in Baku, where I work
-on the electrical engineering side.</p>
+<p class="lede">I study electrical engineering at the University of Houston and graduate in
+2028. I co-founded <a href="https://whaletale.tech">WhaleTale</a>, a hardware company in Baku,
+where I work on the <a href="embedded/">embedded electronics</a>.</p>
 
-<p>Most of this page is things I made on my own time, and many of them run entirely on
+<p>The rest of this page is things I made on my own time, and many of them run entirely on
 your own device. Each one has its source on GitHub.</p>
+
+<p class="meta">ESP32 and Arduino C++ · HolyC with SDL2 and OpenGL · TypeScript · Python · Go ·
+React Native</p>
 
 <ul class="toc" aria-label="Sections">
   <li><a href="#work">work</a></li>
@@ -42,116 +45,110 @@ your own device. Each one has its source on GitHub.</p>
 <h2 id="work"><span class="n">1</span> Work</h2>
 <ul class="work">
   <li>
-    <a class="name" href="https://fullhearts.app">Full Hearts</a><span class="meta">web · TypeScript, Next.js</span>
+    <a class="name" href="https://fullhearts.app">Full Hearts</a><span class="meta">web · TypeScript, Next.js · 2026</span>
     <p>A Minecraft modpack builder that resolves dependencies, matches versions to the loader
     and checks the set against live Modrinth and CurseForge data before exporting one
     <code>.mrpack</code>.
     <span class="links"><a href="https://fullhearts.app">open</a> · <a href="https://github.com/YatoVoid/FullHearts">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://quietcourier.com">The Quiet Courier</a><span class="meta">web · Python, TypeScript, Next.js, Postgres</span>
+    <a class="name" href="https://quietcourier.com">The Quiet Courier</a><span class="meta">web · Python, TypeScript, Next.js, Postgres · 2026</span>
     <p>A daily newspaper for Kindle and Kobo. One finished edition arrives at 5 a.m., laid out
     like an early-1900s broadsheet, and then it ends. It only uses licensed sources and
     carries no ads.
     <span class="links"><a href="https://quietcourier.com/sample">sample</a> · <a href="https://github.com/YatoVoid/quiet-courier">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://yatovoid.github.io/forsakeai/">ForsakeAI</a><span class="meta">browser · TypeScript, Svelte, WebGPU</span>
+    <a class="name" href="https://yatovoid.github.io/forsakeai/">ForsakeAI</a><span class="meta">browser · TypeScript, Svelte, WebGPU · 2026</span>
     <p>Marks the phrases that make text read as machine-written and rewrites them with a small
     model on your own graphics card. Every change can be undone, and numbers, names and links
     are left alone.
     <span class="links"><a href="https://yatovoid.github.io/forsakeai/">open</a> · <a href="https://github.com/YatoVoid/forsakeai">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="lumen/">lumen</a><span class="meta">Linux · HolyC, OpenGL 3.3, GLSL</span>
+    <a class="name" href="lumen/">lumen</a><span class="meta">Linux · HolyC, OpenGL 3.3, GLSL · 2026</span>
     <p>A HolyC host for real-time fragment shader scenes, with an HDR bloom chain, hot reload
-    and a deterministic offline renderer. Like the two entries after it, it is HolyC, Terry
-    Davis's language, compiled to a native binary with
+    and a deterministic offline renderer. Like Ossuary and the HolyC Graphics Guide, it is
+    HolyC, Terry Davis's language, compiled to a native binary with
     <a href="https://github.com/Jamesbarford/holyc-lang">hcc</a> instead of running inside
     TempleOS. So far it has only been tested on Linux.
     <span class="links"><a href="lumen/">notes</a> · <a href="https://github.com/YatoVoid/holyc-opengl-shaders">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://yatovoid.itch.io/ossuary-holyc">Ossuary</a><span class="meta">Linux · HolyC, SDL2, OpenGL</span>
+    <a class="name" href="https://yatovoid.itch.io/ossuary-holyc">Ossuary</a><span class="meta">Linux · HolyC, SDL2, OpenGL · 2026</span>
     <p>A first-person catacomb horror prototype. Find five relics, open the gate, get out
     before the warden finds you. Your lantern lets you see, and lets it see you. One level,
     no audio yet.
     <span class="links"><a href="https://yatovoid.itch.io/ossuary-holyc">download</a> · <a href="https://yatovoid.github.io/ossuary/">docs</a> · <a href="https://github.com/YatoVoid/ossuary">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://yatovoid.github.io/holyc-graphics-guide/">HolyC Graphics Guide</a><span class="meta">Linux, macOS · HolyC, SDL2, OpenGL</span>
-    <p>Thirteen example programs, from a software framebuffer and bitmap font to a scrolling
-    platformer and OpenGL. Every example renders headlessly and CI checks each frame against
-    a recorded hash. It also lists the hcc bugs I ran into, with workarounds.
-    <span class="links"><a href="https://yatovoid.github.io/holyc-graphics-guide/">guide</a> · <a href="https://github.com/YatoVoid/holyc-graphics-guide">source</a></span></p>
+    <a class="name" href="https://github.com/YatoVoid/ESP-NOW-Auto-Pairing">ESP-NOW Auto-Pairing</a><span class="meta">ESP32 · Arduino C++ · 2025</span>
+    <p>Two ESP32 boards find each other over ESP-NOW on first boot by broadcasting, then save
+    the partner's MAC address to EEPROM so they reconnect straight away after a restart. If
+    sends keep failing, the board clears the pairing and starts over.
+    <span class="links"><a href="https://github.com/YatoVoid/ESP-NOW-Auto-Pairing">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://yatovoid.github.io/witch-atelier/">Witch Atelier</a><span class="meta">browser · JavaScript</span>
-    <p>A spell circle drawing tool after <i>Witch Hat Atelier</i>. Freehand strokes are read by
-    their shape, and a finished circle is checked against a spellbook.
-    <span class="links"><a href="https://yatovoid.github.io/witch-atelier/">open</a> · <a href="https://github.com/YatoVoid/witch-atelier">source</a></span></p>
+    <a class="name" href="https://github.com/YatoVoid/PowerGuard360">PowerGuard360</a><span class="meta">hackathon · TypeScript, Python, React Native, Arduino · 2026</span>
+    <p>Predictive maintenance for a gas turbine plant, built by a team at CodeRED (University
+    of Houston) for the Chevron track. A live sensor board feeds one turbine, two Random
+    Forest models say which unit needs maintenance and why, the manager follows the plant in
+    3D, and engineers get the job on their phones. I built the plant server, the website and
+    the phone app, and helped Anthony get his sensor board talking to the server. Like most
+    hackathon code, a lot of it was written with AI help.
+    <span class="links"><a href="https://github.com/YatoVoid/PowerGuard360/blob/main/docs/media/demo.mp4">demo video</a> · <a href="https://github.com/YatoVoid/PowerGuard360">source</a></span></p>
+  </li>
+</ul>
+
+<h3 id="more">More projects</h3>
+<ul class="work short">
+  <li>
+    <a class="name" href="https://yatovoid.github.io/holyc-graphics-guide/">HolyC Graphics Guide</a><span class="meta">Linux, macOS · HolyC, SDL2, OpenGL · 2026</span>
+    <p>Thirteen example programs for graphics in HolyC, from a software framebuffer to OpenGL, each frame checked in CI. <span class="links"><a href="https://yatovoid.github.io/holyc-graphics-guide/">guide</a> · <a href="https://github.com/YatoVoid/holyc-graphics-guide">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://yatovoid.github.io/yatovoid-music-box/">YatoVoid Music Box</a><span class="meta">browser · JavaScript, Web Audio</span>
-    <p>An 8-bit music editor. Notes on a piano roll, a chord per bar, and playback with
-    NES-style square and triangle waves. Exports WAV that loops without a click, MIDI, or a
-    song file.
-    <span class="links"><a href="https://yatovoid.github.io/yatovoid-music-box/">open</a> · <a href="https://github.com/YatoVoid/yatovoid-music-box">source</a></span></p>
+    <a class="name" href="https://yatovoid.github.io/witch-atelier/">Witch Atelier</a><span class="meta">browser · JavaScript · 2026</span>
+    <p>Draw spell circles from <i>Witch Hat Atelier</i>; each stroke is read by its shape and the circle is checked against a spellbook. <span class="links"><a href="https://yatovoid.github.io/witch-atelier/">open</a> · <a href="https://github.com/YatoVoid/witch-atelier">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://github.com/YatoVoid/manga-to-ereader">Tankobon</a><span class="meta">desktop · Python, Qt</span>
-    <p>Packs downloaded manga chapters into one ordered <code>.cbz</code> per volume for Kindle
-    Comic Converter, and places chapters that came without a volume number. Windows, macOS,
-    Linux, and the AUR.
-    <span class="links"><a href="https://github.com/YatoVoid/manga-to-ereader/releases/latest">download</a> · <a href="https://github.com/YatoVoid/manga-to-ereader">source</a></span></p>
+    <a class="name" href="https://yatovoid.github.io/yatovoid-music-box/">YatoVoid Music Box</a><span class="meta">browser · JavaScript, Web Audio · 2026</span>
+    <p>An 8-bit music editor with NES-style sound that exports looping WAV and MIDI. <span class="links"><a href="https://yatovoid.github.io/yatovoid-music-box/">open</a> · <a href="https://github.com/YatoVoid/yatovoid-music-box">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://github.com/YatoVoid/Macro-Tool">Macro Tool</a><span class="meta">desktop · Python, Qt</span>
-    <p>An auto clicker and macro recorder, including Wayland. Recordings come back as a few
-    readable steps, and timing is measured against the clock so the rate holds for hours.
-    <span class="links"><a href="https://github.com/YatoVoid/Macro-Tool/releases/latest">download</a> · <a href="https://github.com/YatoVoid/Macro-Tool">source</a></span></p>
+    <a class="name" href="https://github.com/YatoVoid/manga-to-ereader">Tankobon</a><span class="meta">desktop · Python, Qt · 2026</span>
+    <p>Packs downloaded manga chapters into one ordered <code>.cbz</code> per volume for e-readers. <span class="links"><a href="https://github.com/YatoVoid/manga-to-ereader/releases/latest">download</a> · <a href="https://github.com/YatoVoid/manga-to-ereader">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://github.com/YatoVoid/Pekko-Fridge">Pekko Fridge</a><span class="meta">Android · React Native</span>
-    <p>An expiry tracker for food, medicine and cosmetics. Reads the printed date with the
-    camera, on the phone, and reminds you before things go off.
-    <span class="links"><a href="https://github.com/YatoVoid/Pekko-Fridge">source</a></span></p>
+    <a class="name" href="https://github.com/YatoVoid/Macro-Tool">Macro Tool</a><span class="meta">desktop · Python, Qt · 2025–2026</span>
+    <p>An auto clicker and macro recorder that also works on Wayland. <span class="links"><a href="https://github.com/YatoVoid/Macro-Tool/releases/latest">download</a> · <a href="https://github.com/YatoVoid/Macro-Tool">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://github.com/YatoVoid/tlp-battery-tuner">TLP Battery Tuner</a><span class="meta">Linux · shell</span>
-    <p>One command for battery-focused TLP settings on any Linux distribution. Packaged for the
-    AUR, .deb, .rpm and Homebrew.
-    <span class="links"><a href="https://github.com/YatoVoid/tlp-battery-tuner">source</a></span></p>
+    <a class="name" href="https://github.com/YatoVoid/Pekko-Fridge">Pekko Fridge</a><span class="meta">Android · React Native · 2026</span>
+    <p>An Android expiry tracker that reads the printed date with the camera. <span class="links"><a href="https://github.com/YatoVoid/Pekko-Fridge">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://yatovoid.github.io/crunch-burgers/">CRUNCH Burgers</a><span class="meta">web · client work</span>
-    <p>A website rebuild for a Baku burger chain, in Azerbaijani, English and Russian.
-    <span class="links"><a href="https://yatovoid.github.io/crunch-burgers/">open</a></span></p>
+    <a class="name" href="https://github.com/YatoVoid/tlp-battery-tuner">TLP Battery Tuner</a><span class="meta">Linux · shell · 2026</span>
+    <p>One command for battery-focused TLP settings on any Linux distribution. <span class="links"><a href="https://github.com/YatoVoid/tlp-battery-tuner">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://schedule.az">Schedule.az</a><span class="meta">web · TypeScript, Next.js, Postgres</span>
-    <p>Booking and a directory for service businesses in Baku: barbers, salons, tutors, gyms.
-    Staff calendars, SMS-confirmed bookings, and analytics from what was actually charged.
-    <span class="links"><a href="https://schedule.az">open</a> · <a href="https://github.com/YatoVoid/schedule.az">source</a></span></p>
+    <a class="name" href="https://yatovoid.github.io/crunch-burgers/">CRUNCH Burgers</a><span class="meta">web · client work · 2026</span>
+    <p>A website rebuild for a Baku burger chain, in Azerbaijani, English and Russian. <span class="links"><a href="https://yatovoid.github.io/crunch-burgers/">open</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://github.com/YatoVoid/YatoStream">YatoStream</a><span class="meta">self-hosted · Go</span>
-    <p>A local anime and manga server: library scanning that copes with messy folder names,
-    streaming, AniList sync and a manga reader, with desktop and mobile apps.
-    <span class="links"><a href="https://github.com/YatoVoid/YatoStream">source</a></span></p>
+    <a class="name" href="https://schedule.az">Schedule.az</a><span class="meta">web · TypeScript, Next.js, Postgres · 2026</span>
+    <p>Booking and a directory for service businesses in Baku. <span class="links"><a href="https://schedule.az">open</a> · <a href="https://github.com/YatoVoid/schedule.az">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://github.com/YatoVoid/karaoke-queue">Karaoke Queue</a><span class="meta">self-hosted · JavaScript</span>
-    <p>A song request queue for a local network, meant to replace paid per-song karaoke
-    systems. Guests queue from a tablet and a second screen drives the speakers.
-    <span class="links"><a href="https://github.com/YatoVoid/karaoke-queue">source</a></span></p>
+    <a class="name" href="https://github.com/YatoVoid/YatoStream">YatoStream</a><span class="meta">self-hosted · Go · 2026</span>
+    <p>A self-hosted anime and manga server with desktop and mobile apps. <span class="links"><a href="https://github.com/YatoVoid/YatoStream">source</a></span></p>
   </li>
   <li>
-    <a class="name" href="https://yatovoid.github.io/vitals-local/">Vitals Local</a><span class="meta">browser · JavaScript</span>
-    <p>Health reference and symptom triage. The question flow is built on published decision
-    rules such as Wells, Alvarado and Ottawa, and red flags always win over scores. Works in
-    65 languages, translated on the device.
-    <span class="links"><a href="https://yatovoid.github.io/vitals-local/">open</a> · <a href="https://github.com/YatoVoid/vitals-local">source</a></span></p>
+    <a class="name" href="https://github.com/YatoVoid/karaoke-queue">Karaoke Queue</a><span class="meta">self-hosted · JavaScript · 2026</span>
+    <p>A song request queue for a venue's local network, with a second screen on the speakers. <span class="links"><a href="https://github.com/YatoVoid/karaoke-queue">source</a></span></p>
+  </li>
+  <li>
+    <a class="name" href="https://yatovoid.github.io/vitals-local/">Vitals Local</a><span class="meta">browser · JavaScript · 2026</span>
+    <p>Symptom triage built on published decision rules, in 65 languages, on the device. <span class="links"><a href="https://yatovoid.github.io/vitals-local/">open</a> · <a href="https://github.com/YatoVoid/vitals-local">source</a></span></p>
   </li>
 </ul>
 

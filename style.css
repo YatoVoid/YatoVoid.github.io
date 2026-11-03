@@ -144,6 +144,9 @@ p { margin: 0 0 1rem; }
 }
 .work .meta { margin-left: 0.4rem; }
 .work p { margin: 0.15rem 0 0; }
+.work.short > li { margin-bottom: 0.9rem; }
+.work.short .links { display: inline; margin-left: 0; white-space: nowrap; }
+.work.short .links a { padding-top: 0.85rem; padding-bottom: 0.85rem; margin: -0.85rem 0; }
 .links {
   display: block;
   font: 0.8125rem/1.4 var(--mono);
