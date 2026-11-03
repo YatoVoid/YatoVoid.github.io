@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhaleTale: border, identity and transport hardware - Wali Lambert</title>
+<meta name="description" content="Products of WhaleTale, the Baku hardware company Wali Lambert co-founded: border gates, biometric terminals, a flight controller, cargo locks and more.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar">
+  <div class="bar-inner">
+    <a href="../">YatoVoid</a>
+    <nav aria-label="Site">
+      <ul>
+        <li><a href="../notes/">notes</a></li>
+        <li><a href="https://github.com/YatoVoid">github</a></li>
+        <li><a href="https://www.linkedin.com/in/wali-lambert-003621381/">linkedin</a></li>
+        <li><a href="mailto:wali.lambert1960@gmail.com">email</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<p class="meta crumb"><a href="../">index</a> / <a href="../notes/">notes</a> / whaletale</p>
+<h1 class="with-mark"><svg class="mark" viewBox="180 240 665 530" width="32" height="26" role="img" aria-label="WhaleTale logo">
+  <polygon points="184,246 523,363 466,383 466,628" fill="#1272a8"/>
+  <polygon points="466,383 838,251 466,766" fill="#003179"/>
+</svg>WhaleTale</h1>
+
+<p class="lede">A company in Baku that builds biometric, security, transport and
+infrastructure systems, from the circuit board and the enclosure to the software and the web
+panel that runs them. I co-founded it, work on the electrical engineering, and I'm
+responsible for most of the newer products on this page.</p>
+
+<p class="meta">Baku, Azerbaijan · co-founder, electrical engineering
+<span class="links"><a href="https://whaletale.tech">whaletale.tech</a></span></p>
+
+<ul class="toc" aria-label="On this page">
+  <li><a href="#egate">e-gate</a></li>
+  <li><a href="#thinkid">think-id</a></li>
+  <li><a href="#smartbus">smart bus</a></li>
+  <li><a href="#flight">flight controller</a></li>
+  <li><a href="#padlock">e-padlock</a></li>
+  <li><a href="#residence">residence manager</a></li>
+  <li><a href="#fingerprint">fingerprint controller</a></li>
+  <li><a href="#bracelets">e-bracelets</a></li>
+  <li><a href="#glasses">smart glasses</a></li>
+  <li><a href="#sources">sources</a></li>
+</ul>
+
+<h2 id="egate"><span class="n">1</span> E-Gate</h2>
+<p>Automated border control. A traveller puts a passport on the reader, the gate reads the
+chip over RFID/NFC, checks the document under ultraviolet and infrared light, matches the
+face and fingerprints, and opens the turnstile if everything agrees. Incidents go straight to
+an operator. It is built for airports, sea and road checkpoints and railway stations.</p>
+<figure class="tall">
+  <video controls muted playsinline preload="none" poster="media/egate-test.jpg" width="480" height="854">
+    <source src="media/egate-test.mp4" type="video/mp4">
+  </video>
+  <figcaption>A test run at the gate: document check, face check, then the turnstile
+  opens.</figcaption>
+</figure>
+<table>
+  <tr><th>Part</th><th>What it does</th></tr>
+  <tr><td>document reader</td><td>reads the passport chip over RFID/NFC and checks the page under UV and IR light</td></tr>
+  <tr><td>biometrics</td><td>face and fingerprint match with anti-spoofing</td></tr>
+  <tr><td>turnstile</td><td>opens on a match, with an emergency unlock</td></tr>
+</table>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/egate.html">product page</a></span></p>
+
+<h2 id="thinkid"><span class="n">2</span> Think-ID</h2>
+<p>A portable enrolment terminal for identity documents. It takes a face photo, all ten
+fingerprints with a multispectral scanner, and a signature with its stroke dynamics, then
+checks quality on the device before anything is sent.</p>
+<figure>
+  <img src="https://whaletale.tech/images/thinkID.png" alt="Think-ID enrolment terminal" loading="lazy">
+  <figcaption>Think-ID.</figcaption>
+</figure>
+<table>
+  <tr><th>Spec</th><th>Value</th></tr>
+  <tr><td>battery</td><td>up to 8 hours</td></tr>
+  <tr><td>set-up</td><td>about 5 minutes</td></tr>
+  <tr><td>rating</td><td>IP65, -10 to +40 °C</td></tr>
+</table>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/thinkid.html">product page</a></span></p>
+
+<h2 id="smartbus"><span class="n">3</span> Smart Bus</h2>
+<p>A city bus built around one onboard computer that ties together GPS, LiDAR and radar,
+outside cameras, passenger information panels, stop announcements, card readers and
+turnstiles that count passengers. The cameras feed driver assistance: collision warning,
+lane keeping and adaptive cruise control.</p>
+<figure>
+  <img src="https://whaletale.tech/images/smartBus-complete.png" alt="Smart Bus" loading="lazy">
+  <figcaption>Smart Bus.</figcaption>
+</figure>
+<table>
+  <tr><th>Spec</th><th>Value</th></tr>
+  <tr><td>outside cameras</td><td>8 to 12</td></tr>
+  <tr><td>sensing</td><td>LiDAR and radar, 360°</td></tr>
+</table>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/smartbus.html">product page</a></span></p>
+
+<h2 id="flight"><span class="n">4</span> Flight Controller</h2>
+<p>A flight controller board for drones, designed in-house: processor, gyroscopes,
+accelerometers, magnetometer and GPS on one PCB in a sealed housing. It flies manual or fully
+autonomous, returns to base, lands on its own when something fails, and logs telemetry for
+later.</p>
+<figure>
+  <video controls muted loop playsinline preload="none" width="1280" height="720">
+    <source src="https://whaletale.tech/videos/droneFly.mp4" type="video/mp4">
+  </video>
+  <figcaption>A drone flying on the controller.</figcaption>
+</figure>
+<table>
+  <tr><th>Spec</th><th>Value</th></tr>
+  <tr><td>sensors</td><td>gyroscopes, accelerometers, magnetometer, GPS</td></tr>
+  <tr><td>housing</td><td>IP67</td></tr>
+</table>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/flightcontroller.html">product page</a></span></p>
+
+<h2 id="padlock"><span class="n">5</span> E-Padlock</h2>
+<p>A steel padlock for cargo that only opens with an encrypted NFC card. It tracks its
+position by GPS, falls back to satellite where there is no other signal, and uses vibration,
+impact and motion sensors to report tampering to a monitoring panel.</p>
+<figure>
+  <img src="https://whaletale.tech/images/e-lock-readmore.png" alt="E-Padlock cargo lock" loading="lazy">
+  <figcaption>E-Padlock.</figcaption>
+</figure>
+<table>
+  <tr><th>Spec</th><th>Value</th></tr>
+  <tr><td>battery</td><td>lithium, up to 2 years</td></tr>
+  <tr><td>position</td><td>GPS, about 3 m</td></tr>
+</table>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/epadlock.html">product page</a></span></p>
+
+<h2 id="residence"><span class="n">6</span> Residence Manager</h2>
+<p>Access and billing for apartment buildings. A lift card reader that only goes to your own
+floor, running on a custom board with in-house microcontroller firmware; an entrance intercom
+with video calls to the resident's phone; gates that open from the app or by reading the
+number plate; and one bill for all of it.</p>
+<figure>
+  <img src="https://whaletale.tech/images/residenceManagementSystem-complete.png" alt="Residence Manager" loading="lazy">
+  <figcaption>Residence Manager.</figcaption>
+</figure>
+<table>
+  <tr><th>Part</th><th>What it does</th></tr>
+  <tr><td>lift reader</td><td>custom PCB and firmware; a resident's card only reaches their floor</td></tr>
+  <tr><td>intercom</td><td>tablet at the entrance, video call to the resident's phone</td></tr>
+  <tr><td>gates</td><td>opened from the app or by number plate recognition</td></tr>
+</table>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/residencemanager.html">product page</a></span></p>
+
+<h2 id="fingerprint"><span class="n">7</span> Fingerprint Controller</h2>
+<p>A fingerprint terminal that records attendance for people serving community sentences. It
+checks finger temperature and tissue to reject fake prints, pairs the print with an RFID
+card, keeps working offline, and reports to a central dashboard.</p>
+<figure>
+  <img src="https://whaletale.tech/images/fingerprint-controller.png" alt="Fingerprint Controller terminal" loading="lazy">
+  <figcaption>Fingerprint Controller.</figcaption>
+</figure>
+<table>
+  <tr><th>Spec</th><th>Value</th></tr>
+  <tr><td>templates</td><td>up to 10,000 stored on the device</td></tr>
+  <tr><td>network</td><td>Wi-Fi 802.11n, 4G LTE as backup</td></tr>
+</table>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/fingerprint_controller.html">product page</a></span></p>
+
+<h2 id="bracelets"><span class="n">8</span> E-Bracelets</h2>
+<p>Electronic ankle monitors. Optical and capacitive sensors catch removal attempts, a pulse
+and temperature sensor confirms someone is wearing it, and it reports either to a base
+station over RF or on its own over GPS and GSM.</p>
+<figure>
+  <img src="https://whaletale.tech/images/e-bracelet-readmore.png" alt="E-Bracelet ankle monitor" loading="lazy">
+  <figcaption>E-Bracelet.</figcaption>
+</figure>
+<table>
+  <tr><th>Version</th><th>Reports over</th></tr>
+  <tr><td>standard</td><td>RF to a base station</td></tr>
+  <tr><td>autonomous</td><td>GPS and GSM, ceramic antenna for indoor reception</td></tr>
+</table>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/ebracelets.html">product page</a></span></p>
+
+<h2 id="glasses"><span class="n">9</span> Smart Glasses</h2>
+<p>Glasses for people with low vision that read printed text aloud. A camera captures the
+page, the text is recognised, and it is spoken through the speaker, with voice control for
+speed and volume. Shown at the opening of an ASAN xidmət branch in 2021.</p>
+<figure>
+  <img src="https://whaletale.tech/images/smartGlassesReadmore.png" alt="Smart Glasses" loading="lazy">
+  <figcaption>Smart Glasses.</figcaption>
+</figure>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/smartglasses.html">product page</a></span></p>
+
+<h2 id="sources"><span class="n">10</span> Sources</h2>
+<p>The descriptions, specs and product photos come from the product pages on
+<a href="https://whaletale.tech">whaletale.tech</a>, linked under each product. The E-Gate
+clip is test footage from WhaleTale.</p>
+
+<p class="meta"><a href="../notes/">&larr; all notes</a></p>
+</main>
+
+<footer>
+  <p>One HTML file per page and one stylesheet, with no scripts or trackers.</p>
+  <p>Last changed 2026-11-03.</p>
+</footer>
+</body>
+</html>
