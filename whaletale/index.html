@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WhaleTale: border, identity and transport hardware - Wali Lambert</title>
-<meta name="description" content="Products of WhaleTale, the Baku hardware company Wali Lambert co-founded: border gates, biometric terminals, a flight controller, cargo locks and more.">
+<title>WhaleTale: embedded hardware - Wali Lambert</title>
+<meta name="description" content="The embedded hardware Wali Lambert works on at WhaleTale in Baku: a border gate, biometric terminals, a drone flight controller, a cargo lock, a lift reader and more.">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -30,54 +30,97 @@
   <polygon points="466,383 838,251 466,766" fill="#003179"/>
 </svg>WhaleTale</h1>
 
-<p class="lede">A company in Baku that builds biometric, security, transport and
-infrastructure systems, from the circuit board and the enclosure to the software and the web
-panel that runs them. I co-founded it, work on the electrical engineering, and I'm
-responsible for most of the newer products on this page.</p>
+<p class="lede">This is the low-level embedded side of what I do. WhaleTale is a company in
+Baku that I co-founded; it makes the boards, the firmware, the enclosures and the control
+panels for the devices below. I work on the electrical engineering, and most of the newer
+devices on this page are mine to look after.</p>
 
 <p class="meta">Baku, Azerbaijan · co-founder, electrical engineering
 <span class="links"><a href="https://whaletale.tech">whaletale.tech</a></span></p>
 
 <ul class="toc" aria-label="On this page">
   <li><a href="#egate">e-gate</a></li>
-  <li><a href="#thinkid">think-id</a></li>
-  <li><a href="#smartbus">smart bus</a></li>
   <li><a href="#flight">flight controller</a></li>
-  <li><a href="#padlock">e-padlock</a></li>
   <li><a href="#residence">residence manager</a></li>
+  <li><a href="#padlock">e-padlock</a></li>
+  <li><a href="#thinkid">think-id</a></li>
   <li><a href="#fingerprint">fingerprint controller</a></li>
   <li><a href="#bracelets">e-bracelets</a></li>
   <li><a href="#glasses">smart glasses</a></li>
-  <li><a href="#sources">sources</a></li>
+  <li><a href="#smartbus">smart bus</a></li>
 </ul>
 
 <h2 id="egate"><span class="n">1</span> E-Gate</h2>
-<p>Automated border control. A traveller puts a passport on the reader, the gate reads the
-chip over RFID/NFC, checks the document under ultraviolet and infrared light, matches the
-face and fingerprints, and opens the turnstile if everything agrees. Incidents go straight to
-an operator. It is built for airports, sea and road checkpoints and railway stations.</p>
+<p>A border gate that lets a traveller through without an officer. The passport goes on the
+reader, which reads the chip over RFID/NFC and lights the page with ultraviolet and infrared
+to check it is genuine. The gate then matches the face and fingerprints against the
+document, with liveness checks so a photo or a fake finger won't pass, and only then
+releases the turnstile. Anything that doesn't add up goes to an operator's screen.</p>
 <figure class="tall">
   <video controls muted playsinline preload="none" poster="media/egate-test.jpg" width="480" height="854">
     <source src="media/egate-test.mp4" type="video/mp4">
   </video>
-  <figcaption>A test run at the gate: document check, face check, then the turnstile
-  opens.</figcaption>
+  <figcaption>Test run: document on the reader, face check, turnstile opens.</figcaption>
 </figure>
-<table>
-  <tr><th>Part</th><th>What it does</th></tr>
-  <tr><td>document reader</td><td>reads the passport chip over RFID/NFC and checks the page under UV and IR light</td></tr>
-  <tr><td>biometrics</td><td>face and fingerprint match with anti-spoofing</td></tr>
-  <tr><td>turnstile</td><td>opens on a match, with an emergency unlock</td></tr>
-</table>
 <p class="meta"><span class="links"><a href="https://whaletale.tech/egate.html">product page</a></span></p>
 
-<h2 id="thinkid"><span class="n">2</span> Think-ID</h2>
-<p>A portable enrolment terminal for identity documents. It takes a face photo, all ten
-fingerprints with a multispectral scanner, and a signature with its stroke dynamics, then
-checks quality on the device before anything is sent.</p>
-<figure>
-  <img src="https://whaletale.tech/images/thinkID.png" alt="Think-ID enrolment terminal" loading="lazy">
-  <figcaption>Think-ID.</figcaption>
+<h2 id="flight"><span class="n">2</span> Flight Controller</h2>
+<p>Our own flight controller board for drones. The processor, gyroscopes, accelerometers,
+magnetometer and GPS sit on one board we laid out ourselves, in an IP67 housing. The
+autopilot flies manually or on its own, avoids obstacles, flies back to base, and lands by
+itself if something fails. Every flight is logged so it can be gone through afterwards.</p>
+<div class="pair">
+  <figure>
+    <img src="media/flight-pcb.jpg" alt="Flight controller PCB layout with copper layers shown in red and blue" width="691" height="567" loading="lazy">
+    <figcaption>The board layout.</figcaption>
+  </figure>
+  <figure class="tall">
+    <video controls muted loop playsinline preload="none" poster="media/drone.jpg" width="408" height="720">
+      <source src="media/drone.mp4" type="video/mp4">
+    </video>
+    <figcaption>Indoor test flight.</figcaption>
+  </figure>
+</div>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/flightcontroller.html">product page</a></span></p>
+
+<h2 id="residence"><span class="n">3</span> Residence Manager</h2>
+<p>Access and billing for an apartment building. The lift part was built from nothing: our
+own board and microcontroller firmware behind a card reader in the cabin, which reads a
+resident's encrypted NFC card and only lets the lift go to that resident's floor. Around it
+sit an intercom at the entrance that rings the resident's phone with video, gates that open
+from the app or by reading number plates, and one bill for lift, intercom and parking. If the
+bill isn't paid, access stops until it is.</p>
+<figure class="shot">
+  <img src="media/residence.jpg" alt="Icons for the four parts: NFC lift reader, resident card, gate barrier and billing" width="617" height="616" loading="lazy">
+  <figcaption>The four parts: lift reader, resident card, gates, billing.</figcaption>
+</figure>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/residencemanager.html">product page</a></span></p>
+
+<h2 id="padlock"><span class="n">4</span> E-Padlock</h2>
+<p>A hardened steel padlock for cargo crossing borders. It opens only for an encrypted NFC
+card that also has to carry the right permissions. Inside are GPS, a vibration and impact
+sensor, an accelerometer and a gyroscope, so a knock, a cut or a lock that leaves its route
+is reported straight away, with satellite as the fallback where there is no other signal.
+Every opening is logged with a time stamp.</p>
+<figure class="shot">
+  <img src="media/epadlock.jpg" alt="E-Padlock, a black padlock body with a steel shackle and a QR code" width="496" height="686" loading="lazy">
+  <figcaption>E-Padlock.</figcaption>
+</figure>
+<table>
+  <tr><th>Spec</th><th>Value</th></tr>
+  <tr><td>battery</td><td>lithium, up to 2 years</td></tr>
+  <tr><td>position</td><td>GPS, to about 3 m</td></tr>
+</table>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/epadlock.html">product page</a></span></p>
+
+<h2 id="thinkid"><span class="n">5</span> Think-ID</h2>
+<p>An enrolment terminal for ID documents that folds into a carry case. It takes a face
+photo with automatic lighting correction and background replacement, all ten fingerprints on
+a multispectral scanner that rejects fakes, and a signature with its pen pressure and speed.
+Quality is checked on the device, and the data leaves it encrypted and signed.</p>
+<figure class="shot">
+  <img src="media/thinkid.jpg" alt="Think-ID opened, showing the camera, screen and fingerprint scanner" width="554" height="718" loading="lazy">
+  <figcaption>Think-ID, opened.</figcaption>
 </figure>
 <table>
   <tr><th>Spec</th><th>Value</th></tr>
@@ -87,116 +130,53 @@ checks quality on the device before anything is sent.</p>
 </table>
 <p class="meta"><span class="links"><a href="https://whaletale.tech/thinkid.html">product page</a></span></p>
 
-<h2 id="smartbus"><span class="n">3</span> Smart Bus</h2>
-<p>A city bus built around one onboard computer that ties together GPS, LiDAR and radar,
-outside cameras, passenger information panels, stop announcements, card readers and
-turnstiles that count passengers. The cameras feed driver assistance: collision warning,
-lane keeping and adaptive cruise control.</p>
-<figure>
-  <img src="https://whaletale.tech/images/smartBus-complete.png" alt="Smart Bus" loading="lazy">
-  <figcaption>Smart Bus.</figcaption>
-</figure>
-<table>
-  <tr><th>Spec</th><th>Value</th></tr>
-  <tr><td>outside cameras</td><td>8 to 12</td></tr>
-  <tr><td>sensing</td><td>LiDAR and radar, 360°</td></tr>
-</table>
-<p class="meta"><span class="links"><a href="https://whaletale.tech/smartbus.html">product page</a></span></p>
-
-<h2 id="flight"><span class="n">4</span> Flight Controller</h2>
-<p>A flight controller board for drones, designed in-house: processor, gyroscopes,
-accelerometers, magnetometer and GPS on one PCB in a sealed housing. It flies manual or fully
-autonomous, returns to base, lands on its own when something fails, and logs telemetry for
-later.</p>
-<figure>
-  <video controls muted loop playsinline preload="none" width="1280" height="720">
-    <source src="https://whaletale.tech/videos/droneFly.mp4" type="video/mp4">
-  </video>
-  <figcaption>A drone flying on the controller.</figcaption>
-</figure>
-<table>
-  <tr><th>Spec</th><th>Value</th></tr>
-  <tr><td>sensors</td><td>gyroscopes, accelerometers, magnetometer, GPS</td></tr>
-  <tr><td>housing</td><td>IP67</td></tr>
-</table>
-<p class="meta"><span class="links"><a href="https://whaletale.tech/flightcontroller.html">product page</a></span></p>
-
-<h2 id="padlock"><span class="n">5</span> E-Padlock</h2>
-<p>A steel padlock for cargo that only opens with an encrypted NFC card. It tracks its
-position by GPS, falls back to satellite where there is no other signal, and uses vibration,
-impact and motion sensors to report tampering to a monitoring panel.</p>
-<figure>
-  <img src="https://whaletale.tech/images/e-lock-readmore.png" alt="E-Padlock cargo lock" loading="lazy">
-  <figcaption>E-Padlock.</figcaption>
-</figure>
-<table>
-  <tr><th>Spec</th><th>Value</th></tr>
-  <tr><td>battery</td><td>lithium, up to 2 years</td></tr>
-  <tr><td>position</td><td>GPS, about 3 m</td></tr>
-</table>
-<p class="meta"><span class="links"><a href="https://whaletale.tech/epadlock.html">product page</a></span></p>
-
-<h2 id="residence"><span class="n">6</span> Residence Manager</h2>
-<p>Access and billing for apartment buildings. A lift card reader that only goes to your own
-floor, running on a custom board with in-house microcontroller firmware; an entrance intercom
-with video calls to the resident's phone; gates that open from the app or by reading the
-number plate; and one bill for all of it.</p>
-<figure>
-  <img src="https://whaletale.tech/images/residenceManagementSystem-complete.png" alt="Residence Manager" loading="lazy">
-  <figcaption>Residence Manager.</figcaption>
-</figure>
-<table>
-  <tr><th>Part</th><th>What it does</th></tr>
-  <tr><td>lift reader</td><td>custom PCB and firmware; a resident's card only reaches their floor</td></tr>
-  <tr><td>intercom</td><td>tablet at the entrance, video call to the resident's phone</td></tr>
-  <tr><td>gates</td><td>opened from the app or by number plate recognition</td></tr>
-</table>
-<p class="meta"><span class="links"><a href="https://whaletale.tech/residencemanager.html">product page</a></span></p>
-
-<h2 id="fingerprint"><span class="n">7</span> Fingerprint Controller</h2>
-<p>A fingerprint terminal that records attendance for people serving community sentences. It
-checks finger temperature and tissue to reject fake prints, pairs the print with an RFID
-card, keeps working offline, and reports to a central dashboard.</p>
-<figure>
-  <img src="https://whaletale.tech/images/fingerprint-controller.png" alt="Fingerprint Controller terminal" loading="lazy">
+<h2 id="fingerprint"><span class="n">6</span> Fingerprint Controller</h2>
+<p>A fingerprint terminal that keeps attendance for people sentenced to corrective labour.
+The scanner has its own processing unit, checks finger temperature and tissue to catch fake
+prints, and asks for a rescan when a print is poor. It pairs the print with an RFID card,
+keeps up to 10,000 templates on the device so it works offline, and reports over Wi-Fi with
+4G LTE as backup.</p>
+<figure class="shot">
+  <img src="media/fingerprint.jpg" alt="Fingerprint Controller, a dark rounded box with the scanner window on top" width="813" height="900" loading="lazy">
   <figcaption>Fingerprint Controller.</figcaption>
 </figure>
-<table>
-  <tr><th>Spec</th><th>Value</th></tr>
-  <tr><td>templates</td><td>up to 10,000 stored on the device</td></tr>
-  <tr><td>network</td><td>Wi-Fi 802.11n, 4G LTE as backup</td></tr>
-</table>
 <p class="meta"><span class="links"><a href="https://whaletale.tech/fingerprint_controller.html">product page</a></span></p>
 
-<h2 id="bracelets"><span class="n">8</span> E-Bracelets</h2>
-<p>Electronic ankle monitors. Optical and capacitive sensors catch removal attempts, a pulse
-and temperature sensor confirms someone is wearing it, and it reports either to a base
-station over RF or on its own over GPS and GSM.</p>
-<figure>
-  <img src="https://whaletale.tech/images/e-bracelet-readmore.png" alt="E-Bracelet ankle monitor" loading="lazy">
-  <figcaption>E-Bracelet.</figcaption>
+<h2 id="bracelets"><span class="n">7</span> E-Bracelets</h2>
+<p>Ankle monitors used instead of detention. Optical and capacitive sensors notice when the
+strap is opened or the case is tampered with, and a pulse and temperature sensor confirms
+it is still being worn. One version reports to a base station over RF; the other works on
+its own over GPS and GSM, with a ceramic antenna so it still gets a signal indoors.</p>
+<figure class="shot">
+  <img src="media/ebracelet.jpg" alt="E-Bracelet taken apart: strap, battery, circuit board and case" width="623" height="447" loading="lazy">
+  <figcaption>Taken apart: strap, battery, board, case.</figcaption>
 </figure>
-<table>
-  <tr><th>Version</th><th>Reports over</th></tr>
-  <tr><td>standard</td><td>RF to a base station</td></tr>
-  <tr><td>autonomous</td><td>GPS and GSM, ceramic antenna for indoor reception</td></tr>
-</table>
 <p class="meta"><span class="links"><a href="https://whaletale.tech/ebracelets.html">product page</a></span></p>
 
-<h2 id="glasses"><span class="n">9</span> Smart Glasses</h2>
-<p>Glasses for people with low vision that read printed text aloud. A camera captures the
-page, the text is recognised, and it is spoken through the speaker, with voice control for
-speed and volume. Shown at the opening of an ASAN xidmət branch in 2021.</p>
-<figure>
-  <img src="https://whaletale.tech/images/smartGlassesReadmore.png" alt="Smart Glasses" loading="lazy">
+<h2 id="glasses"><span class="n">8</span> Smart Glasses</h2>
+<p>Glasses that read printed text aloud for people with low vision. A camera in the frame
+captures the page, the text is recognised in several languages, and it is read out through
+a speaker or headphones. Speed and volume are set by voice. They were shown to the President
+of Azerbaijan at the opening of the sixth ASAN xidmət branch in 2021.</p>
+<figure class="shot">
+  <img src="media/smartglasses.jpg" alt="Smart Glasses, a dark visor with the camera in the middle of the frame" width="692" height="375" loading="lazy">
   <figcaption>Smart Glasses.</figcaption>
 </figure>
 <p class="meta"><span class="links"><a href="https://whaletale.tech/smartglasses.html">product page</a></span></p>
 
-<h2 id="sources"><span class="n">10</span> Sources</h2>
-<p>The descriptions, specs and product photos come from the product pages on
-<a href="https://whaletale.tech">whaletale.tech</a>, linked under each product. The E-Gate
-clip is test footage from WhaleTale.</p>
+<h2 id="smartbus"><span class="n">9</span> Smart Bus</h2>
+<p>A city bus run from one onboard computer. It takes in GPS, LiDAR and radar around the
+whole bus and 8 to 12 outside cameras, and uses them for collision warnings, lane keeping
+and adaptive cruise control. The same computer drives the passenger screens and stop
+announcements, the card readers and turnstiles that count passengers, and a health check of
+the bus that flags parts before they fail.</p>
+<figure class="shot">
+  <img src="media/smartbus.jpg" alt="Smart Bus, a small boxy electric bus with a sliding glass door" width="748" height="434" loading="lazy">
+  <figcaption>Smart Bus.</figcaption>
+</figure>
+<p class="meta"><span class="links"><a href="https://whaletale.tech/smartbus.html">product page</a></span></p>
+
+<p>Descriptions and product images are from <a href="https://whaletale.tech">whaletale.tech</a>.</p>
 
 <p class="meta"><a href="../notes/">&larr; all notes</a></p>
 </main>

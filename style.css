@@ -213,6 +213,8 @@ figure.tall video {
   height: min(70vh, 34rem);
   aspect-ratio: 9 / 16;
 }
+figure.shot img { max-width: min(100%, 22rem); }
+.pair figure.tall video { width: 100%; height: auto; }
 figcaption {
   font: 0.8125rem/1.45 var(--mono);
   color: var(--dim);
