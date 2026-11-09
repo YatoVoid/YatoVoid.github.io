@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Second Look: a review flag for Devpost galleries - Wali Lambert</title>
+<meta name="description" content="Second Look is a browser extension for hackathon judges. It compares each Devpost project with its team's older public work and flags close matches for a person to review.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar">
+  <div class="bar-inner">
+    <a href="../">YatoVoid</a>
+    <nav aria-label="Site">
+      <ul>
+        <li><a href="../notes/">notes</a></li>
+        <li><a href="https://github.com/YatoVoid">github</a></li>
+        <li><a href="https://www.linkedin.com/in/wali-lambert-003621381/">linkedin</a></li>
+        <li><a href="mailto:wali.lambert1960@gmail.com">email</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<p class="meta crumb"><a href="../">index</a> / <a href="../notes/">notes</a> / second look</p>
+<h1>Second Look</h1>
+
+<p class="lede">A browser extension for hackathon judges. On a Devpost gallery it reads
+every project, then reads what each team member has posted before, and puts a
+<b>CHECK AGAIN</b> flag on projects whose write-up closely matches something older.</p>
+
+<p>Judges get a few minutes per project. Nobody has time to open every member's profile and
+compare paragraphs by hand, and that's exactly where a project from last year, entered
+again under a new name, gets through. The extension does the reading. A person still makes
+the call. A flag means "open this one", and a match often has a dull explanation: a team
+reusing its own words, a template, or a resubmission the event allows.</p>
+
+<p class="meta">Chrome 121+, Firefox 128+ · JavaScript, WebExtensions (Manifest V3) · 70 tests
+<span class="links"><a href="https://github.com/YatoVoid/second-look">source</a> · <a href="https://github.com/YatoVoid/second-look/releases/latest">download</a></span></p>
+
+<ul class="toc" aria-label="On this page">
+  <li><a href="#demo">demo</a></li>
+  <li><a href="#rules">when it flags</a></li>
+  <li><a href="#common">common wording</a></li>
+  <li><a href="#evidence">the evidence</a></li>
+  <li><a href="#polite">rate limits</a></li>
+  <li><a href="#trust">untrusted pages</a></li>
+  <li><a href="#run">running it</a></li>
+  <li><a href="#limits">limits</a></li>
+</ul>
+
+<h2 id="demo"><span class="n">1</span> A check, start to finish</h2>
+<p>This is one gallery page being checked, recorded in real time with no cuts. The hackathon
+is made up: "Harbor Hack 2026", its teams and their profiles are test pages served locally,
+so no real project or person appears here or anywhere on this page.</p>
+
+<figure>
+  <video controls muted playsinline preload="none" poster="media/demo.jpg" width="1200" height="760">
+    <source src="media/demo.mp4" type="video/mp4">
+  </video>
+  <figcaption>Key 1 in the menu starts the check. Six projects take about fifteen seconds,
+  most of it spent waiting between requests on purpose. Two get flagged, the arrows step
+  between them, and clicking a flag opens what it matched. Headless Chromium; the menu was
+  captured from its own page and placed where the browser draws it.</figcaption>
+</figure>
+
+<h2 id="rules"><span class="n">2</span> When it flags</h2>
+<p>Each write-up is cut into words and then into overlapping 6-word phrases. Two texts are
+compared by the phrases they share, and runs of shared phrases are joined back into
+identical passages. A project gets flagged when, against some older page, one of these
+holds:</p>
+<table>
+  <thead><tr><th>Rule</th><th>Threshold</th></tr></thead>
+  <tbody>
+    <tr><td>long identical run</td><td>20 or more words in a row</td></tr>
+    <tr><td>several passages</td><td>3 or more shared runs of at least 8 words</td></tr>
+    <tr><td>phrase overlap</td><td>20% of the shorter text's 6-word phrases appear in the other</td></tr>
+    <tr><td>renamed project</td><td>titles 70% alike <i>and</i> word-count vectors with cosine 0.55 or higher</td></tr>
+  </tbody>
+</table>
+<p>All of the numbers live in one frozen object, so tuning them is a one-line change and the
+tests catch whatever that breaks:</p>
+<pre><code>export const THRESHOLDS = Object.freeze({
+  shingle: 6,
+  minShingleContentWords: 3,
+  minContentWords: 25,
+  shortTextSpan: 15,
+  longSpan: 20,
+  multiSpanWords: 8,
+  multiSpanCount: 3,
+  containment: 0.2,
+  cosine: 0.55,
+  title: 0.7,
+  ...
+});</code></pre>
+<p>A phrase only counts if at least 3 of its 6 words are content words, so "and we wanted to
+make it" doesn't match anything. Write-ups under 25 content words are too short for the
+overlap rules and only flag on a 15-word identical run.</p>
+<p>A similar title never flags on its own. Neither does a shared idea. In the test suite, a
+member who built a student carpool app enters a Slack bot for office carpools; the titles
+are 62% alike, they share no 8-word run, and nothing gets flagged. Reusing an idea is normal.</p>
+
+<h2 id="common"><span class="n">3</span> Common wording</h2>
+<p>Devpost hands every team the same headings ("Inspiration", "What it does", "Challenges we
+ran into"), and half the gallery writes "we learned a lot about". Without a filter, those
+phrases would match everything. So the analyzer counts how many pages on the current gallery
+each phrase shows up on, and any phrase found on 3 or more is treated as common wording and
+left out of every comparison:</p>
+<pre><code>function remember(url, prepared) {
+  for (const key of prepared.shingles.keys()) {
+    let set = docFreq.get(key);
+    if (!set) docFreq.set(key, (set = new Set()));
+    set.add(url);
+  }
+}
+
+function genericKeys() {
+  const out = new Set();
+  for (const [key, urls] of docFreq) if (urls.size &gt;= L.genericDocFreq) out.add(key);
+  return out;
+}</code></pre>
+<p>Two projects copying each other still match, because the copied text is on two pages, not
+three. A phrase that every team uses drops out by itself, and no stop list has to be kept
+up to date.</p>
+
+<h2 id="evidence"><span class="n">4</span> What a flag shows</h2>
+<p>A flag that just says "suspicious" is useless to a judge and unfair to the team. Each flag
+here opens the page it matched and how that page was found (which member's profile, or which
+personal site), when it was read, the hackathon it was submitted to, the reasons in plain
+words, and the identical passages side by side. If something couldn't be read (a robots.txt
+refusal, a timeout, Cloudflare) the panel says so instead of guessing.</p>
+
+<div class="pair">
+  <figure>
+    <img src="media/gallery.png" width="1200" height="760" loading="lazy" alt="A gallery of six project cards. TideWatch and ParkPal carry a CHECK AGAIN flag, and a status bar in the corner reads Done 6/6, 2 flagged.">
+    <figcaption>After a check. <code>0/2 &lt; &gt;</code> counts flags across the whole
+    gallery and jumps to the next one, even on another page.</figcaption>
+  </figure>
+  <figure>
+    <img src="media/project-page.png" width="1200" height="760" loading="lazy" alt="A single project page with a large CHECK AGAIN flag under the title.">
+    <figcaption>A project page opened later in the same session. The flag comes from the
+    saved result, so nothing is fetched again.</figcaption>
+  </figure>
+</div>
+
+<p>Key 2 checks every page of the gallery on its own: one page, a 2-second pause, Devpost's
+"next" link, and so on until the last page. At the end it opens a report that can be copied
+as text or saved as a PDF.</p>
+
+<div class="pair">
+  <figure>
+    <img src="media/report.png" width="1000" height="1260" loading="lazy" alt="A full review report listing each flagged project with its matched source, reasons and identical passages.">
+    <figcaption>The report after a full gallery review.</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="media/popup.png" width="360" height="353" loading="lazy" alt="The extension menu during a check, showing progress and keys for pause, stop and clear.">
+    <figcaption>The menu while a check runs. Every action has a single key.</figcaption>
+  </figure>
+</div>
+
+<h2 id="polite"><span class="n">5</span> Rate limits</h2>
+<p>A 24-project gallery means 100 to 150 requests to Devpost, plus whatever personal
+sites the teams link. The extension is a guest on those servers, so it goes slowly on
+purpose. Every origin gets its own queue: requests to one site run one at a time, at least
+1 second apart on Devpost and 2 seconds anywhere else. A <code>429</code> or
+<code>503</code> pushes the next request past <code>Retry-After</code> and doubles the gap
+for that site, up to 8 times the normal one.</p>
+<pre><code>function schedule(origin, task) {
+  const prev = tails.get(origin) ?? Promise.resolve();
+  const run = prev
+    .catch(() =&gt; {})
+    .then(async () =&gt; {
+      const at = Math.max((lastStart.get(origin) ?? -Infinity) + gap(origin),
+                          notBefore.get(origin) ?? -Infinity);
+      const wait = at - now();
+      if (wait &gt; 0) await sleep(wait);
+      lastStart.set(origin, now());
+      return task();
+    });
+  tails.set(origin, run);
+  return run;
+}</code></pre>
+<p>Each origin's queue is a promise chain, and the <code>.catch</code> keeps one failed
+request from stalling the ones behind it. The clock and <code>sleep</code> are passed in,
+so the tests run it against a fake clock instead of waiting.</p>
+<p>It also reads <code>robots.txt</code> before anything else on a site and skips the site
+if it can't fetch it. There are hard caps too: 80 projects per page, 8 members per project,
+3 profile links per member, 40 pages per full review, and 8000 requests per browser
+session.</p>
+
+<h2 id="trust"><span class="n">6</span> Untrusted pages</h2>
+<p>Every page the extension reads was written by a stranger, and the flags are drawn on
+top of a site whose scripts it doesn't control. Three rules follow from that:</p>
+<ul class="plain">
+  <li>Fetched HTML goes through <code>DOMParser</code> and only ever comes back out as text.
+  Nothing from a fetched page is inserted as markup.</li>
+  <li>Requests go out without cookies or a referrer, so nothing behind the judge's Devpost
+  login is read.</li>
+  <li>Flags, the status bar and the evidence panel live in closed shadow roots, which
+  Devpost's own scripts can't reach into or restyle.</li>
+</ul>
+<pre><code>const res = await fetchImpl(url, {
+  credentials: 'omit',
+  redirect: 'follow',
+  referrerPolicy: 'no-referrer',
+  signal: controller.signal,
+  headers: { Accept: accept },
+});</code></pre>
+<p>There's no server behind it, no analytics, and no account. The only thing written to
+disk is a dismissal: the project URL, the matching sources, the judge's note and the time.
+Results and reports last until the browser closes.</p>
+<p>Site access is optional and asked for when it's needed. Devpost access is requested on
+the first check. Personal sites are asked about one batch at a time in a small window, with
+a key to allow them, a key to skip them, and a key to allow every site until the browser
+closes. That last grant is removed on the next start.</p>
+
+<h2 id="run"><span class="n">7</span> Running it</h2>
+<p>It isn't on the Chrome Web Store or addons.mozilla.org. For Chrome, Edge or Brave,
+download
+<a href="https://github.com/YatoVoid/second-look/releases/latest/download/second-look-chrome.zip">second-look-chrome.zip</a>,
+unzip it, turn on Developer mode in <code>chrome://extensions</code> and pick the folder
+with <b>Load unpacked</b>. Firefox and Zen need a build from source for now:</p>
+<pre><code>git clone https://github.com/YatoVoid/second-look.git
+cd second-look
+npm install
+npm run build     # dist/chrome and dist/firefox
+npm test          # node:test on synthetic pages, no network</code></pre>
+<p>Then load <code>dist/firefox/manifest.json</code> from
+<code>about:debugging#/runtime/this-firefox</code>.</p>
+<table>
+  <thead><tr><th>Key</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr><td><kbd>1</kbd></td><td>check this page</td></tr>
+    <tr><td><kbd>2</kbd></td><td>check every page of this gallery, then open a report</td></tr>
+    <tr><td><kbd>P</kbd> <kbd>R</kbd> <kbd>S</kbd></td><td>pause, resume, stop</td></tr>
+    <tr><td><kbd>Esc</kbd> <kbd>H</kbd> <kbd>D</kbd></td><td>on a flag: close, hide for the session, dismiss with a note</td></tr>
+    <tr><td><kbd>C</kbd></td><td>clear saved data (press twice)</td></tr>
+  </tbody>
+</table>
+<table>
+  <thead><tr><th>File</th><th>What's in it</th></tr></thead>
+  <tbody>
+    <tr><td><code>src/lib/similarity.js</code></td><td>the flag rules and the reasons they print</td></tr>
+    <tr><td><code>src/lib/analyzer.js</code></td><td>per-project pipeline, common wording, limits</td></tr>
+    <tr><td><code>src/lib/extract.js</code></td><td>Devpost and personal-site parsing</td></tr>
+    <tr><td><code>src/lib/fetcher.js</code></td><td>robots.txt, retries, request budget, cache</td></tr>
+    <tr><td><code>src/background.js</code></td><td>queue, permissions, saved results, full reviews</td></tr>
+    <tr><td><code>src/content/</code></td><td>flags, status bar, evidence panel</td></tr>
+  </tbody>
+</table>
+
+<h2 id="limits"><span class="n">8</span> Limits</h2>
+<ul class="plain">
+  <li>It compares wording only. Copied code, a reused demo video or the same screenshots
+  won't flag.</li>
+  <li>It can't tell which text came first. The evidence names the hackathon the older page
+  was entered in, and the judge checks the dates.</li>
+  <li>It depends on Devpost's current markup. After a redesign it reports "layout not
+  recognized" until <code>extract.js</code> is updated.</li>
+  <li>If Cloudflare challenges a request, that page counts as unreadable. The extension
+  doesn't try to get past the check.</li>
+  <li>Only the first page of each member's Devpost projects is read.</li>
+  <li>Firefox has no signed download yet.</li>
+</ul>
+<p>The interface uses VT323 and IBM Plex Mono, both under the SIL Open Font License, and the
+icon is drawn on a 16&times;16 grid by a script in the repo.</p>
+
+<p class="meta"><a href="../notes/">&larr; all notes</a></p>
+</main>
+
+<footer>
+  <p>One HTML file per page and one stylesheet, with no scripts or trackers.</p>
+  <p>Last changed 2026-11-09.</p>
+</footer>
+</body>
+</html>
